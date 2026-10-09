@@ -147,13 +147,17 @@ public class SavingsGoalService {
             remainingAmount = remainingAmount.setScale(2, RoundingMode.HALF_UP);
         }
 
+        BigDecimal formattedProgress = currentProgress.compareTo(BigDecimal.ZERO) == 0
+                ? BigDecimal.ZERO
+                : currentProgress.setScale(2, RoundingMode.HALF_UP);
+
         return new GoalResponse(
                 goal.getId(),
                 goal.getGoalName(),
                 goal.getTargetAmount().setScale(2, RoundingMode.HALF_UP),
                 goal.getTargetDate(),
                 goal.getStartDate(),
-                currentProgress.setScale(2, RoundingMode.HALF_UP),
+                formattedProgress,
                 percentage,
                 remainingAmount
         );

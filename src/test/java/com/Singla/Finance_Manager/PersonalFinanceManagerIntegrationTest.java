@@ -198,7 +198,7 @@ public class PersonalFinanceManagerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.transactions", hasSize(2)));
 
-        // Update transaction - date change prohibited (400)
+        // Update transaction - date change is ignored (200), date remains unchanged
         TransactionUpdateRequest dateChangeReq = new TransactionUpdateRequest(
                 BigDecimal.valueOf(55000.00),
                 "Updated",
@@ -209,7 +209,8 @@ public class PersonalFinanceManagerIntegrationTest {
                         .session(userASession)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dateChangeReq)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.date").value("2024-01-15"));
 
         // Update transaction amount & description (200)
         TransactionUpdateRequest validUpdate = new TransactionUpdateRequest(

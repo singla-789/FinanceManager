@@ -98,10 +98,10 @@ class TransactionServiceTest {
         Transaction tx1 = new Transaction(testUser, salaryCategory, BigDecimal.valueOf(50000.00), LocalDate.of(2024, 1, 15), "Salary");
         tx1.setId(1L);
 
-        when(transactionRepository.findFilteredTransactions(testUser, null, null, null, null))
+        when(transactionRepository.findFilteredTransactions(testUser, null, null, null, null, null))
                 .thenReturn(List.of(tx1));
 
-        TransactionListResponse response = transactionService.getTransactions(testUser, null, null, null, null);
+        TransactionListResponse response = transactionService.getTransactions(testUser, null, null, null, null, null);
 
         assertEquals(1, response.getTransactions().size());
         assertEquals(1L, response.getTransactions().get(0).getId());
@@ -129,11 +129,12 @@ class TransactionServiceTest {
     }
 
     @Test
-    void testUpdateTransactionModifyDateThrowsBadRequest() {
+    void testUpdateTransactionDateIsIgnored() {
         Transaction existing = new Transaction(testUser, salaryCategory, BigDecimal.valueOf(50000.00), LocalDate.of(2024, 1, 15), "Salary");
         existing.setId(1L);
 
         when(transactionRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(transactionRepository.save(any(Transaction.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         TransactionUpdateRequest request = new TransactionUpdateRequest(
                 BigDecimal.valueOf(60000.00),
@@ -142,7 +143,9 @@ class TransactionServiceTest {
                 LocalDate.of(2024, 1, 16)
         );
 
-        assertThrows(BadRequestException.class, () -> transactionService.updateTransaction(testUser, 1L, request));
+        TransactionResponse response = transactionService.updateTransaction(testUser, 1L, request);
+        assertEquals(LocalDate.of(2024, 1, 15), response.getDate());
+        assertEquals(BigDecimal.valueOf(60000.00), response.getAmount());
     }
 
     @Test

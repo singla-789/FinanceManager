@@ -60,7 +60,8 @@ public class ReportService {
             }
         }
 
-        BigDecimal netSavings = incomeSum.subtract(expenseSum).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal diff = incomeSum.subtract(expenseSum);
+        BigDecimal netSavings = diff.compareTo(BigDecimal.ZERO) == 0 ? BigDecimal.ZERO : diff.setScale(2, RoundingMode.HALF_UP);
         return new MonthlyReportResponse(month, year, totalIncome, totalExpenses, netSavings);
     }
 
@@ -93,7 +94,8 @@ public class ReportService {
             }
         }
 
-        BigDecimal netSavings = incomeSum.subtract(expenseSum).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal diff = incomeSum.subtract(expenseSum);
+        BigDecimal netSavings = diff.compareTo(BigDecimal.ZERO) == 0 ? BigDecimal.ZERO : diff.setScale(2, RoundingMode.HALF_UP);
         return new YearlyReportResponse(year, totalIncome, totalExpenses, netSavings);
     }
 }

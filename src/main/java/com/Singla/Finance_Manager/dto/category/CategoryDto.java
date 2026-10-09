@@ -45,4 +45,9 @@ public class CategoryDto {
     public void setIsCustom(Boolean custom) {
         isCustom = custom;
     }
+
+    @JsonProperty("custom")
+    public Boolean getCustom() {
+        return isCustom;
+    }
 }

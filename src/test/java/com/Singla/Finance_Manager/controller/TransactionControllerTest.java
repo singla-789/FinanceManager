@@ -82,7 +82,7 @@ class TransactionControllerTest {
     @WithMockUser
     void testGetTransactions() throws Exception {
         TransactionResponse tx = new TransactionResponse(1L, BigDecimal.valueOf(50000.00), LocalDate.now(), "Salary", "desc", CategoryType.INCOME);
-        when(transactionService.getTransactions(eq(testUser), any(), any(), any(), any()))
+        when(transactionService.getTransactions(eq(testUser), any(), any(), any(), any(), any()))
                 .thenReturn(new TransactionListResponse(List.of(tx)));
 
         mockMvc.perform(get("/api/transactions"))

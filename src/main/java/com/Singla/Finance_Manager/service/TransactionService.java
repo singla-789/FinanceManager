@@ -54,8 +54,8 @@ public class TransactionService {
     }
 
     @Transactional(readOnly = true)
-    public TransactionListResponse getTransactions(User user, LocalDate startDate, LocalDate endDate, Long categoryId, CategoryType type) {
-        List<Transaction> transactions = transactionRepository.findFilteredTransactions(user, startDate, endDate, categoryId, type);
+    public TransactionListResponse getTransactions(User user, LocalDate startDate, LocalDate endDate, Long categoryId, String category, CategoryType type) {
+        List<Transaction> transactions = transactionRepository.findFilteredTransactions(user, startDate, endDate, categoryId, category, type);
         List<TransactionResponse> dtos = transactions.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
@@ -78,10 +78,7 @@ public class TransactionService {
             throw new ResourceNotFoundException("Transaction with ID " + id + " not found");
         }
 
-        // Date immutability check
-        if (request.getDate() != null && !request.getDate().equals(transaction.getDate())) {
-            throw new BadRequestException("Transaction date field cannot be modified");
-        }
+        // Date field is immutable per spec and cannot be modified (ignored on update)
 
         if (request.getAmount() != null) {
             transaction.setAmount(request.getAmount());

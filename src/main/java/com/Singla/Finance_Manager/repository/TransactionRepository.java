@@ -27,6 +27,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
            "AND (:startDate IS NULL OR t.date >= :startDate) " +
            "AND (:endDate IS NULL OR t.date <= :endDate) " +
            "AND (:categoryId IS NULL OR t.category.id = :categoryId) " +
+           "AND (:category IS NULL OR LOWER(t.category.name) = LOWER(:category)) " +
            "AND (:type IS NULL OR t.category.type = :type) " +
            "ORDER BY t.date DESC, t.id DESC")
     List<Transaction> findFilteredTransactions(
@@ -34,6 +35,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate,
             @Param("categoryId") Long categoryId,
+            @Param("category") String category,
             @Param("type") CategoryType type
     );
 
