@@ -1,0 +1,69 @@
+package com.Singla.Finance_Manager.dto.transaction;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+public class TransactionCreateRequest {
+
+    @NotNull(message = "Amount is mandatory")
+    @Positive(message = "Amount must be a positive decimal value")
+    private BigDecimal amount;
+
+    @NotNull(message = "Date is mandatory")
+    @PastOrPresent(message = "Transaction date cannot be a future date")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate date;
+
+    @NotBlank(message = "Category is mandatory")
+    private String category;
+
+    private String description;
+
+    public TransactionCreateRequest() {
+    }
+
+    public TransactionCreateRequest(BigDecimal amount, LocalDate date, String category, String description) {
+        this.amount = amount;
+        this.date = date;
+        this.category = category;
+        this.description = description;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+}
